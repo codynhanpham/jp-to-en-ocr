@@ -1,6 +1,10 @@
 # jp-to-en-ocr
 A scuff quality-of-life manga translator, using [manga_ocr](https://github.com/kha-white/manga-ocr) and [translators](https://github.com/uliontse/translators) libraries.
 
+## Demo
+
+![https://raw.githubusercontent.com/codynhanpham/jp-to-en-ocr/main/jp-en_manga-ocr_demo_15s.gif]
+
 ## Why?
 - I'm ~not a weeb~
 - Japanese is hard. I'm trying my best to learn this fascinating language.
