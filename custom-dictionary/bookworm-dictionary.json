@@ -10,6 +10,7 @@
     "アウブ": "Aub",
     "領主候補": "Archduke Candidate",
     "ギーベ": "Giebe",
+    "騎獸": "highbeast",
 
     "ユルゲンシュミット": "Yurgenschmidt",
     "エーレンフェスト": "Ehrenfest",
@@ -32,9 +33,12 @@
     "エーファ": "Effa",
     "トゥーリ": "Tuuli",
     "カミル": "Kamil",
+    "(オットー": "Otto",
+
     "ベンノ": "Benno",
     "フリーダ": "Freida",
-    "(オットー": "Otto",
+    "グスタフ": "Gustav",
+    
 
     "フラン": "Fran",
     "ギル": "Gil",
@@ -47,6 +51,7 @@
     "フーゴ": "Hugo",
     "ロジーナ": "Rosina",
     "ブリギッテ": "Brigitte",
+    "プリギッテ": "Brigitte",
     "デリア": "Delia",
     "トラウゴット": "Traugott",
 
@@ -62,7 +67,7 @@
     "ローゼマリー": "Rozemary",
     "エックハルト": "Eckhart",
     "コルネリウス": "Cornelius",
-    "ダームエルト": "Damuel",
+    "ダームエル": "Damuel",
     "アンゲリカ": "Angelica",
     "レオノーレ": "Leonore",
     "リヒャルダ": "Rihyarda",

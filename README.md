@@ -27,9 +27,12 @@ pip3 install manga-ocr
 3. Take a look around if you want to. Note that you can add your own "dictionary" in the `custom-dictionary` folder.
 4. Install some dependencies, including [translators](https://github.com/uliontse/translators), for this script:
 ```
-pip3 install pyperclip translators
+pip3 install pyperclip translators argostranslate easynmt
 ```
-5. Pray that things work perfectly.
+
+5. You would also want to download one of the offline translation models (the argostranslate library, ja-en) [here](https://www.argosopentech.com/argospm/index/#:~:text=ipfs-,Japanese,1.1,-ipfs) and save it in the same folder as the `main.py` file.
+
+6. Pray that things work perfectly.
 
 ## Use?
 1. Open the terminal/command prompt and start [manga_ocr](https://github.com/kha-white/manga-ocr). Leave it run in the background.
@@ -44,6 +47,11 @@ manga_ocr
 ```
 python main.py
 ```
+
+**Note:**
+
+There are 3 offline translation models that will automatically be downloaded when you run the script for the first time. The offline translation models are quite fast and reliable (connection-wise), though they are not as accurate as the online ones. They also require more memory (especially the `m2m_100_1.2b` model (model3, translation 0.3)). If you are running this on a low-end machine, you may want edit the `main.py` file to remove some or all of the offline models.
+
 
 ---
 
