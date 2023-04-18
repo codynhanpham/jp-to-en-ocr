@@ -55,7 +55,7 @@ There are 3 offline translation models that will automatically be downloaded whe
 
 ---
 
-4. To select the text, use your OS native way to screen snip. On Windows, that is `Ctrl+Shift+S`. You can bind that combination to a non-primary mouse button or another keyboard key for convenience.
+4. To select the text, use your OS native way to screen snip. On Windows, that is `Windows+Shift+S`. You can bind that combination to a non-primary mouse button or another keyboard key for convenience.
 5. After doing the screen snip, [manga_ocr](https://github.com/kha-white/manga-ocr) takes care of the character recognition, and this script does the translation.
 6. You will need to wait for the translations to finish before snipping new text. If you select `Yes` to use all 4 translators, it may take a while, depending on your internet connection.
 7. To exit, just close the window or spam `Ctrl+C`
