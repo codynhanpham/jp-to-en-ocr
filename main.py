@@ -4,7 +4,7 @@ import json
 from json.decoder import JSONDecodeError
 from PIL import ImageGrab
 import pyperclip
-import os
+import os, sys
 
 from manga_ocr import MangaOcr
 manga_ocr = MangaOcr()
@@ -43,8 +43,14 @@ def newClipboardImageToText():
             img = ImageGrab.grabclipboard()
             if img:
                 break
+        except KeyboardInterrupt:
+            try:
+                exit(0)
+            except SystemExit:
+                os._exit(0)
         except:
-            pass
+            pass # No image in clipboard
+            
     text = manga_ocr(img)
     pyperclip.copy("")
     return text
@@ -101,46 +107,56 @@ if allTranslators:
 
 dictionary = useDictionary()
 
-print(f"\n\nReady! Using {dictionary if dictionary else 'no'} dictionary and {'all' if allTranslators else 'offline'} translators.")
+print(f"\n\nReady!\nUsing {dictionary if dictionary else 'no'} dictionary\n\nand\n{'All' if allTranslators else 'Offline'} translators.")
 print("Waiting for new text to be copied to clipboard...")
 
 totalCharsCount = 0
 while True:
-    text = newClipboardImageToText()
-    # Count the number of characters in the text and add it to the total
-    charsCount = len(text)
-    totalCharsCount += charsCount
+    try:
+        text = newClipboardImageToText()
+        # Count the number of characters in the text and add it to the total
+        charsCount = len(text)
+        totalCharsCount += charsCount
 
-    if (text != ""):
-        print("ORIGINAL:     \t" +"\x1b[33m" + text + "\x1b[0m")
+        if (text != ""):
+            print("ORIGINAL:     \t" +"\x1b[33m" + text + "\x1b[0m")
 
-        # First, pre-process the text by replacing kana/terms for the actual official translations
-        if dictionary:
-            for key in dictionary:
-                text = text.replace(key, dictionary[key])
+            # First, pre-process the text by replacing kana/terms for the actual official translations
+            if dictionary:
+                for key in dictionary:
+                    text = text.replace(key, dictionary[key])
 
-        # Then, translate the text
-        
-        trans00 = model0.translate(text)
-        print("\x1b[1m" + "TRANSLATION 0.0:  " + "\x1b[32m" + trans00 + "\x1b[0m")
+            # Then, translate the text
+            
+            trans00 = model0.translate(text)
+            print("\x1b[1m" + "TRANSLATION 0.0:  " + "\x1b[32m" + trans00 + "\x1b[0m")
 
-        trans01 = model1.translate(text, source_lang='ja', target_lang='en', beam_size=15, max_length=250)
-        print("\x1b[1m" + "TRANSLATION 0.1:  " + "\x1b[32m" + trans01 + "\x1b[0m")
+            trans01 = model1.translate(text, source_lang='ja', target_lang='en', beam_size=15, max_length=250)
+            print("\x1b[1m" + "TRANSLATION 0.1:  " + "\x1b[32m" + trans01 + "\x1b[0m")
 
-        trans02 = model2.translate(text, source_lang='ja', target_lang='en', beam_size=15, max_length=250)
-        print("\x1b[1m" + "TRANSLATION 0.2:  " + "\x1b[32m" + trans02 + "\x1b[0m")
+            trans02 = model2.translate(text, source_lang='ja', target_lang='en', beam_size=15, max_length=250)
+            print("\x1b[1m" + "TRANSLATION 0.2:  " + "\x1b[32m" + trans02 + "\x1b[0m")
 
-        if allTranslators:
-            trans1 = tss.bing(text, from_language='ja', to_language='en')
-            trans2 = tss.google(text, from_language='ja', to_language='en')
-            print("\x1b[1m" + "TRANSLATION 1:    " + "\x1b[32m" + trans1 + "\x1b[0m")
-            print("\x1b[1m" + "TRANSLATION 2:    " + "\x1b[32m" + trans2 + "\x1b[0m")
+            if allTranslators:
+                trans1 = tss.bing(text, from_language='ja', to_language='en')
+                trans2 = tss.google(text, from_language='ja', to_language='en')
+                print("\x1b[1m" + "TRANSLATION 1:    " + "\x1b[32m" + trans1 + "\x1b[0m")
+                print("\x1b[1m" + "TRANSLATION 2:    " + "\x1b[32m" + trans2 + "\x1b[0m")
 
-            trans3 = tss.reverso(text, from_language='ja', to_language='en')
-            print("\x1b[1m" + "TRANSLATION 3:    " + "\x1b[32m" + trans3 + "\x1b[0m")
-            # trans4 = html.unescape(tss.deepl(text, from_language='ja', to_language='en'))
-            # print("\x1b[1m" + "TRANSLATION 4:    " + "\x1b[32m" + trans4 + "\x1b[0m")
+                trans3 = tss.reverso(text, from_language='ja', to_language='en')
+                print("\x1b[1m" + "TRANSLATION 3:    " + "\x1b[32m" + trans3 + "\x1b[0m")
+                # trans4 = html.unescape(tss.deepl(text, from_language='ja', to_language='en'))
+                # print("\x1b[1m" + "TRANSLATION 4:    " + "\x1b[32m" + trans4 + "\x1b[0m")
 
-        print(f"Characters translated: {charsCount}")
-        print(f"(Total: {totalCharsCount})")
-        print("")
+            print(f"Characters translated: {charsCount}")
+            print(f"(Total: {totalCharsCount})")
+            print("")
+
+    except KeyboardInterrupt:
+        break
+
+print("\n\nExiting...")
+try:
+    exit(0)
+except SystemExit:
+    os._exit(0)
