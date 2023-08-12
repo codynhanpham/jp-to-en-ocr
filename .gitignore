@@ -4,3 +4,5 @@ m2m_100_1.2b
 mbart50_m2en
 opus-mt
 translate-ja_en-1_1.argosmodel
+venv
+offline_models.zip

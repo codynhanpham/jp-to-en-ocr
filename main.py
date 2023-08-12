@@ -1,13 +1,16 @@
 print("\nOCR required manga_ocr (https://github.com/kha-white/manga-ocr) installed and run in the background.")
 
-import pyperclip
 import json
 from json.decoder import JSONDecodeError
-import html
+from PIL import ImageGrab
+import pyperclip
 import os
 
+from manga_ocr import MangaOcr
+manga_ocr = MangaOcr()
+
 from argostranslate import package, translate
-print("Loading translation models...")
+print("\nLoading translation models...")
 ARGOS_DEVICE_TYPE="cuda"
 package.install_from_path('translate-ja_en-1_1.argosmodel')
 installed_languages = translate.get_installed_languages()
@@ -34,46 +37,61 @@ def booleanInput(prompt):
             print("Invalid input. Please enter 'yes' or 'no'.")
             continue
 
-dictionary = None
-useDictionary = booleanInput("\n\nUse custom dictionary? (y/n): ")
+def newClipboardImageToText():
+    while True:
+        try:
+            img = ImageGrab.grabclipboard()
+            if img:
+                break
+        except:
+            pass
+    text = manga_ocr(img)
+    pyperclip.copy("")
+    return text
 
-if useDictionary:
+def useDictionary(dictionary = None):
+    useDictionary = booleanInput("\nUse custom dictionary? (y/n): ")
+    if useDictionary == False:
+        return None
+    
     path = os.getcwd()
     dictionaryList = os.listdir(path + "/custom-dictionary")
     dictionaryList = [f for f in dictionaryList if os.path.isfile(path + "/custom-dictionary" + "/" + f)]
 
     if len(dictionaryList) == 0:
         print("\nNo dictionaries found. Skipped.")
+        return None
+
+    print("\nAvailable dictionaries:")
+    for i in range(len(dictionaryList)):
+        print(f"[{i+1}] {dictionaryList[i]}")
+
+    if len(dictionaryList) == 1:
+        dictionary = dictionaryList[0]
+        print(f"\nUsing dictionary: {dictionary}")
     else:
-        print("\nAvailable dictionaries:")
-        # List of dictionaries, numbered from [1]
-        for i in range(len(dictionaryList)):
-            print(f"[{i+1}] {dictionaryList[i]}")
-
-        # If there is only one dictionary, use it
-        if len(dictionaryList) == 1:
-            dictionary = dictionaryList[0]
-            print(f"\nUsing dictionary: {dictionary}")
-        else:
-            # If there are multiple dictionaries, ask the user to choose one
-            while True:
-                try:
-                    dictionary = dictionaryList[int(input("Choose dictionary: "))-1]
-                    break
-                except ValueError:
-                    print("Invalid input. Please enter a number.")
-                    continue
-                except IndexError:
-                    print("Invalid input. Please enter a number from the list.")
-                    continue
-
-        # Load the dictionary
-        with open(path + "/custom-dictionary" + "/" + dictionary, encoding='utf-8') as f:
+        while True:
             try:
-                Dictionary = json.load(f)
-            except JSONDecodeError:
-                print("Invalid JSON file. Skipped.")
-                Dictionary = None
+                dictionary = dictionaryList[int(input("Choose dictionary: "))-1]
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+                continue
+            except IndexError:
+                print("Invalid input. Please enter a number from the list.")
+                continue
+
+    with open(path + "/custom-dictionary" + "/" + dictionary, encoding='utf-8') as f:
+        if f == None or f == "":
+            print("Invalid dictionary file. Skipped.")
+            return None
+        try:
+            dictionary = json.load(f)
+        except JSONDecodeError:
+            print("Invalid JSON file. Skipped.")
+            dictionary = None
+    
+    return dictionary
 
 allTranslators = booleanInput("\nUse online translators (slower)? (y/n): ")
 
@@ -81,13 +99,14 @@ if allTranslators:
     import translators as ts
     import translators.server as tss
 
+dictionary = useDictionary()
+
 print(f"\n\nReady! Using {dictionary if dictionary else 'no'} dictionary and {'all' if allTranslators else 'offline'} translators.")
 print("Waiting for new text to be copied to clipboard...")
 
 totalCharsCount = 0
 while True:
-    text = pyperclip.waitForNewPaste()
-
+    text = newClipboardImageToText()
     # Count the number of characters in the text and add it to the total
     charsCount = len(text)
     totalCharsCount += charsCount
@@ -95,10 +114,10 @@ while True:
     if (text != ""):
         print("ORIGINAL:     \t" +"\x1b[33m" + text + "\x1b[0m")
 
-        # First, pre-process the text by replacing katakana/terms for the actual official translations
-        if Dictionary:
-            for key in Dictionary:
-                text = text.replace(key, Dictionary[key])
+        # First, pre-process the text by replacing kana/terms for the actual official translations
+        if dictionary:
+            for key in dictionary:
+                text = text.replace(key, dictionary[key])
 
         # Then, translate the text
         
