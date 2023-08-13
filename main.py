@@ -106,7 +106,7 @@ if allTranslators:
 dictionary = useDictionary()
 
 print(f"\n\nReady!\nUsing {dictionary if dictionary else 'no'} dictionary\n\nand\n{'All' if allTranslators else 'Offline'} translators.")
-print("Waiting for new text to be copied to clipboard...")
+print("\nOK! Waiting for new screen snip...")
 
 totalCharsCount = 0
 while True:

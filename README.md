@@ -49,7 +49,7 @@ Here: https://pytorch.org/get-started/locally/#start-locally
 
 >*If you don't have an NVIDIA GPU, you can skip this step.* Later on, the script will use the CPU version of PyTorch.
 
-In any case, the PyTorch installation command should look like this:
+In any case, the PyTorch installation command should look something like this:
 ```bash
 pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu117
 ```
@@ -63,7 +63,7 @@ In your virtual environment, run:
 pip3 install -r requirements.txt
 ```
 
-***In some cases, the installation on Windows may fail at the `EasyNMT` library, somewhere around the `fasttext` or `sentencepiece`. This is a [known issue](https://github.com/UKPLab/EasyNMT/issues/3) with the `EasyNMT` library.***
+***In some cases, the installation on Windows may fail at the `EasyNMT` library, somewhere around `fasttext` or `sentencepiece`. This is a [known issue](https://github.com/UKPLab/EasyNMT/issues/3) with the `EasyNMT` library.***
 
 To solve this, simply open the `requirements.txt` file, and delete the (last) `EasyNMT==2.0.2` line, then run the command above again.
 
