@@ -32,7 +32,7 @@ It has been tested to work on Python versions 3.9, 3.10, and 3.11.
 ```
 git clone https://github.com/codynhanpham/jp-to-en-ocr.git
 ```
-**Also,** download and extract the ***content*** of `offline_models.zip` in the [releases section](https://github.com/codynhanpham/jp-to-en-ocr/releases/tag/offline-models-v0.1.0) into the same folder as the `main.py` file (the `Extract Here...` option).
+**Also,** download and extract the ***content*** of `offline_models.zip` in the [releases section](https://github.com/codynhanpham/jp-to-en-ocr/releases/tag/offline-models-v0.1.0) into the same folder as the `main.py` file (the `Extract Here` option).
 
 </br>
 
