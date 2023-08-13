@@ -1,5 +1,3 @@
-print("\nOCR required manga_ocr (https://github.com/kha-white/manga-ocr) installed and run in the background.")
-
 import json
 from json.decoder import JSONDecodeError
 from PIL import ImageGrab
