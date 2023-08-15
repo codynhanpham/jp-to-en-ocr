@@ -188,13 +188,13 @@ def main():
 
                     print("\x1b[1mAI TRANSLATION: \x1b[32m", end=" ", flush=True)
                     response = asyncio.run(ai_translate_stream(prompt_f["prompt"]))
-                    print("\x1b[0m\n\n")
+                    print("\x1b[0m\n")
 
                 base_prompt += base_prompt + response
 
                 print(f"Characters translated: {charsCount}")
                 print(f"(Total: {totalCharsCount})")
-                print("")
+                print("\n")
 
         except KeyboardInterrupt:
             break

@@ -5,6 +5,8 @@ mbart50_m2en
 opus-mt
 translate-ja_en-1_1.argosmodel
 venv
+ai-translate_api
+ai-translate_api.zip
 offline_models.zip
 latest_prompt.txt
-*/__pycache__
+*__pycache__

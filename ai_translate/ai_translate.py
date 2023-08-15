@@ -50,7 +50,7 @@ def format_prompt(last_turn, base_prompt, system):
     # add the last turn to the base prompt
     prompt = base_prompt +"\n<!eop>\n" + last_turn
 
-    prompt_length = 1650
+    prompt_length = 1750
     # split by <!eop> into turns. Check the if the total word count of all turns is greater than 1650, if so, remove the turns from top until it is less than 1650
     turns = prompt.split("<!eop>")
     total_word_count = 0
