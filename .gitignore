@@ -9,4 +9,5 @@ ai-translate_api
 ai-translate_api.zip
 offline_models.zip
 latest_prompt.txt
+translationHistory.txt
 *__pycache__
