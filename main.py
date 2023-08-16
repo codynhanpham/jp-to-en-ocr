@@ -4,6 +4,7 @@ from json.decoder import JSONDecodeError
 from PIL import ImageGrab
 import pyperclip
 import os, sys
+from langdetect import detect
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
@@ -40,11 +41,15 @@ def booleanInput(prompt):
             print('Invalid input. Please enter "yes" or "no".')
             continue
 
-def newClipboardImageToText():
+def newClipboardImageToText(allow_ja_text = False):
+    text = ""
     while True:
         try:
             img = ImageGrab.grabclipboard()
             if img:
+                break
+            elif detect(pyperclip.paste()) == "ja" and allow_ja_text:
+                text = pyperclip.paste()
                 break
         except KeyboardInterrupt:
             try:
@@ -54,7 +59,9 @@ def newClipboardImageToText():
         except:
             pass # No image in clipboard
             
-    text = manga_ocr(img)
+    if not text:
+        text = manga_ocr(img)
+
     pyperclip.copy("")
     return text
 
@@ -126,10 +133,10 @@ def main():
     # Without AI
     while True:
         try:
-            text = newClipboardImageToText()
+            text = newClipboardImageToText(allow_ja_text=True)
 
             if (text != ""):
-                AIInput = f"USER: {text}\nMachine Translations:\n"
+                AIInput = f"USER: Japanese: {text}\nMachine Translations:\n"
                 # Count the number of characters in the text and add it to the total
                 charsCount = len(text)
                 totalCharsCount += charsCount
@@ -155,15 +162,14 @@ def main():
                 
                 trans00 = model0.translate(text)
                 AIInput += "- " + trans00 + "\n"
-                if config["USE_AI"] == "false":
+                if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
                     print("\x1b[1m" + "TRANSLATION 0.0:  " + "\x1b[32m" + trans00 + "\x1b[0m")
 
-                trans01 = model1.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
-                AIInput += "- " + trans01 + "\n"
-                if config["USE_AI"] == "false":
+                if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
+                    trans01 = model1.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
                     print("\x1b[1m" + "TRANSLATION 0.1:  " + "\x1b[32m" + trans01 + "\x1b[0m")
 
-                # if config["USE_AI"] == "false":
+                # if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
                 #     trans02 = model2.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
                 #     print("\x1b[1m" + "TRANSLATION 0.2:  " + "\x1b[32m" + trans02 + "\x1b[0m")
 
@@ -172,16 +178,16 @@ def main():
                     AIInput += "- " + trans1 + "\n"
                     trans2 = tss.google(text, from_language="ja", to_language="en")
                     AIInput += "- " + trans2 + "\n"
-                    if config["USE_AI"] == "false":
+                    if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
                         print("\x1b[1m" + "TRANSLATION 1:    " + "\x1b[32m" + trans1 + "\x1b[0m")
                         print("\x1b[1m" + "TRANSLATION 2:    " + "\x1b[32m" + trans2 + "\x1b[0m")
 
-                AIInput += trans_note + "\nASSISTANT: "
+                AIInput += trans_note + "\nASSISTANT: English: "
 
                 # If AI is enabled, use the AI to translate the text
                 if config["USE_AI"] == "true":
                     prompt_f = format_prompt(AIInput, base_prompt, system)
-                    base_prompt = prompt_f["base_prompt"]
+                    
                     # Write and keep overwriting the prompt to the file latest_prompt.txt
                     with open("latest_prompt.txt", "w", encoding="utf-8") as f:
                         f.write(prompt_f["prompt"])
@@ -190,11 +196,16 @@ def main():
                     response = asyncio.run(ai_translate_stream(prompt_f["prompt"]))
                     print("\x1b[0m\n")
 
-                base_prompt += base_prompt + response
+                    # Check if response["response_full"] is empty, if so, use the the last ML translation as the log
+                    if response["response_full"] == "":
+                        response["response_full"] = response["machine_translations"][-1]
 
-                print(f"Characters translated: {charsCount}")
-                print(f"(Total: {totalCharsCount})")
-                print("\n")
+                    # base_prompt = prompt_f["base_prompt"] + response["response_full"]
+
+
+                # print(f"Characters translated: {charsCount}")
+                # print(f"(Total: {totalCharsCount})")
+                print("")
 
         except KeyboardInterrupt:
             break

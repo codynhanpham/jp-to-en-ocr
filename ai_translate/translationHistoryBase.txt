@@ -1,172 +1,153 @@
 
 <!eop>
-USER: わっすごい下町と違って真っ白で綺麗で大きい建物がたくさんですね！
+USER: Japanese: わっすごい下町と違って真っ白で綺麗で大きい建物がたくさんですね！
 Machine Translations:
 - It is a white, beautiful and large building unlike the very lower city!
-- There's a lot of white, beautiful, big buildings.
 - Unlike the amazing Lower City, there are many beautiful and large buildings that are pure white!
 - Unlike the great Lower City, there are many pure white, beautiful and large buildings!
 Translation Note: 下町 = lower city
-ASSISTANT: Amazing! Unlike the lower city, there are many big, beautiful buildings that are pure white!
+ASSISTANT: English: Amazing! Unlike the lower city, there are many big, beautiful buildings that are pure white!
 <!eop>
-USER: お母さんモグラは若い息子に教育を教えるとみないました。彼女は息子が自惚れてはいけないと分かりません。
+USER: Japanese: お母さんモグラは若い息子に教育を教えるとみないました。彼女は息子が自惚れてはいけないと分かりません。
 Machine Translations:
 - Mom Mogra was considered to teach young sons. She does not know that her son should not fall in love.
-- Mother Mogha wanted to teach her young son education.She didn't know that her son shouldn't be jealous.
 - The mother moles thought she was going to teach her young son education. She doesn't know that her son shouldn't be proud of himself.
 - Mom Mole did not think she would teach her young son about education. She doesn't know unless her son is proud.
 Translation Note: None
-ASSISTANT: The mom decided to teach her young son a lesson. She knew that her son should not be conceited.
+ASSISTANT: English: The mom decided to teach her young son a lesson. She knew that her son should not be conceited.
 <!eop>
-USER: 大人ならば騎獣を使うし幼い子どもを連れる時は馬車を使ぅ
+USER: Japanese: 大人ならば騎獣を使うし幼い子どもを連れる時は馬車を使ぅ
 Machine Translations:
 - If you are an adult, use highbeast and use horsepower when you are young
-- If you're an adult, use highbreast. If you take a young child, use a carriage.
 - If you are an adult, use highbeast, and when you bring young children, use a horse-drawn carriage.
 - If you are an adult, use Highbeast and use a carriage when you bring a young child
 Translation Note: 騎獣 = highbeast
-ASSISTANT: If you're an adult, use a highbeast, and if you're a young child, use a carriage.
+ASSISTANT: English: If you're an adult, use a highbeast, and if you're a young child, use a carriage.
 <!eop>
-USER: 街を歩く者は滅多にいない
+USER: Japanese: 街を歩く者は滅多にいない
 Machine Translations:
 - People walking around the city are not destroyed
-- Few people walk the streets.
 - Rarely walks the streets
 - Few people walk around the city
 Translation Note: None
-ASSISTANT: People rarely walk around the city.
+ASSISTANT: English: People rarely walk around the city.
 <!eop>
-USER: 上級貴族の館の区域にもお庭が小さい館が多いですが
+USER: Japanese: 上級貴族の館の区域にもお庭が小さい館が多いですが
 Machine Translations:
 - There are many small gardens in the area ofのnoble
-- (Laughter)
 - There are many small gardens in the area of Archnoble's house.
 - There are many houses with small gardens in Archnouble's houses.
 Translation Note: 上級貴族 = archnoble
-ASSISTANT: There are many small gardens in the area of the archnoble's house.
+ASSISTANT: English: There are many small gardens in the area of the archnoble's house.
 <!eop>
-USER: ローゼマリーに娘がいたと知ればいろいろ無茶な要求を言い出す可能性がある
+USER: Japanese: ローゼマリーに娘がいたと知ればいろいろ無茶な要求を言い出す可能性がある
 Machine Translations:
 - If you know that you have a daughter in Rozemary, you can say a variety of tealess requests
-- If you find out that Rozemary had a daughter, you could make a lot of unreasonable demands.
 - If he finds out that Rozemary had a daughter, he may make all sorts of absurd demands.
 - If you know that your daughter was in Rozemary, you could make various unreasonable requests.
 Translation Note: ローゼマリー = Rozemary
-ASSISTANT: If he knew that Rozemary had a daughter, he might make a lot of unreasonable demands.
+ASSISTANT: English: If he knew that Rozemary had a daughter, he might make a lot of unreasonable demands.
 <!eop>
-USER: 先の健康診断で教えたばかりだろう
+USER: Japanese: 先の健康診断で教えたばかりだろう
 Machine Translations:
 - I’ve just taught in a health check
-- I'm sure you've just given it to me for the first time in your medical history.
 - I guess I just taught you at the previous medical checkup.
 - I would have just taught me at the previous health checkup
 Translation Note: None
-ASSISTANT: I'm sure I just taught you at the previous health checkup.
+ASSISTANT: English: I'm sure I just taught you at the previous health checkup.
 <!eop>
-USER: 君のその体は一度死んだせいで興奮すると魔力の流れが不安定になる．．．と
+USER: Japanese: 君のその体は一度死んだせいで興奮すると魔力の流れが不安定になる．．．と
 Machine Translations:
 - The flow of mana becomes unstable when you get excited because your body died once. ..
-- When your body gets excited because you're dead once, the flow of mana becomes unstable.
 - When your body is excited because it died once, the flow of MANA becomes unstable... and
 - If you get excited because of your body, the flow of MANA will be unstable. . . and
 Translation Note: 魔力 = mana
-ASSISTANT: The flow of mana becomes unstable when your body gets excited because it died once... and
+ASSISTANT: English: The flow of mana becomes unstable when your body gets excited because it died once... and
 <!eop>
-USER: 「ホーホ一ホー」「彼女は夜に飛び回って歌いました。
+USER: Japanese: 「ホーホ一ホー」「彼女は夜に飛び回って歌いました。
 Machine Translations:
 - “Hoho Ichiho” and “She sang at night.”
-- “Hoo Hoo” she was flying around and singing at night.
 - "Ho-ho" "She flew around at night and sang.
 - "Hoho Ichi Ho" "She flew around at night and sang.
 Translation Note: None
-ASSISTANT: “Whoooooo Whoooooo Whoooooo” she sang as she flew around in the night.
+ASSISTANT: English: “Whoooooo Whoooooo Whoooooo” she sang as she flew around in the night.
 <!eop>
-USER: それからようこそいらっしゃいましたフェルディナンド様
-Machine Translations:
-- Then welcome todindinand
-- And welcome, Mr. Ferdinand.
-- And welcome Ferdinand
-- Welcome to Ferdinand
-Translation Note: フェルディナンド = Ferdinand 
-ASSISTANT: Then, welcome, Mr. Ferdinand.
-<!eop>
-USER: 最後にオオカミはとても疲れ横になり、完全に疲れ果てていました。
+USER: Japanese: 最後にオオカミはとても疲れ横になり、完全に疲れ果てていました。
 Machine Translations:
 - Finally, the wolf was very tired and lying.
-- At the end, the wolf was very tired and completely exhausted.
 - Finally the wolf lay so tired and completely exhausted.
 - Finally, the wolf was very tired and completely exhausted.
 Translation Note: None
-ASSISTANT: The Wolf was very tired at the end and was lying down, completely exhausted.
+ASSISTANT: English: The Wolf was very tired at the end and was lying down, completely exhausted.
 <!eop>
-USER: おめでとうローゼマインこれで君は正式にカルステッドの娘として認められた
+USER: Japanese: おめでとうローゼマインこれで君は正式にカルステッドの娘として認められた
 Machine Translations:
 - Congratulation Rozemyne, you officially recognized as a daughter of Karstedt
-- Congratulations, Rozemyne. You are officially recognized as the daughter of Karsted.
 - Congratulations Rozemyne Now you are officially recognized as Karstedt's daughter
 - Congratulations Rozemyne You are now officially recognized as Karstedt's daughter
 Translation Note: ローゼマイン = Rozemyne, カルステッド = Karstedt
-ASSISTANT: Congratulations, Rozemyne. You are now officially recognized as Karstedt's daughter.
+ASSISTANT: English: Congratulations, Rozemyne. You are now officially recognized as Karstedt's daughter.
 <!eop>
-USER: 其方の虚弱体質を知れば気を遣うようになるはずだ
+USER: Japanese: 其方の虚弱体質を知れば気を遣うようになるはずだ
 Machine Translations:
 - If you know the weakness of the body, you should be careful
-- I'm sure you'd be more concerned if you knew their weakness.
 - If you know their frail constitution, you will be more careful.
 - If you know your weak constitution, you should be careful.
 Translation Note: None
-ASSISTANT: If you know their frail constitution, you will be more careful.
+ASSISTANT: English: If you know their frail constitution, you will be more careful.
 <!eop>
-USER: 前神殿長のものを急遽仕立て直したそうです
+USER: Japanese: 前神殿長のものを急遽仕立て直したそうです
 Machine Translations:
 - PreviousHigh Bishop
-- (Laughter)
 - It seems that the previous High Bishop was remade in a hurry.
 - It seems that the previous HIGH BISHOP was re -tailored in a hurry.
 Translation Note: 神殿長 = High Bishop
-ASSISTANT: It seems they hastily re-tailored what the previous High Bishop had.
+ASSISTANT: English: It seems they hastily re-tailored what the previous High Bishop had.
 <!eop>
-USER: 一方ツバメは、美しく華やか羽を持っています。羽は色と質感が豊富です。
+USER: Japanese: 一方ツバメは、美しく華やか羽を持っています。羽は色と質感が豊富です。
 Machine Translations:
 - One-sided turtle has beautiful and gorgeous feathers. The feather is rich in color and texture.
-- The turtle, on the other hand, has beautiful and magnificent wings; the wings are full of color and texture.
 - Swallows, on the other hand, have beautiful and gorgeous wings. The plumage is rich in color and texture.
 - On the other hand, swallows have beautiful and gorgeous wings. The wings are rich in color and texture.
 Translation Note: None
-ASSISTANT: The swallow, on the other hand, has beautiful, gorgeous feathers. The feathers are a rich in colour and texture.
+ASSISTANT: English: The swallow, on the other hand, has beautiful, gorgeous feathers. The feathers are a rich in colour and texture.
 <!eop>
-USER: そして、夜、フクロウは何を歌いましたか？
+USER: Japanese: そして、夜、フクロウは何を歌いましたか？
 Machine Translations:
 - And what did クロs sing at night?
-- And what did the cockroach sing at night?
 - And, What did the owl sing at night?
 - And what did the owl sing at night?
 Translation Note: None
-ASSISTANT: And what did the owl sing at night?
+ASSISTANT: English: And what did the owl sing at night?
 <!eop>
-USER: あなたに水を持っていけば、あなには食べ物を探す必要がなくなります。私はあがたの食い物になりすす。二度と私に水も積まないで下さい。
+USER: Japanese: それからようこそいらっしゃいましたフェルディナンド様
+Machine Translations:
+- Then welcome todindinand
+- And welcome Ferdinand
+- Welcome to Ferdinand
+Translation Note: フェルディナンド = Ferdinand 
+ASSISTANT: English: Then, welcome, Mr. Ferdinand.
+<!eop>
+USER: Japanese: あなたに水を持っていけば、あなには食べ物を探す必要がなくなります。私はあがたの食い物になりすす。二度と私に水も積まないで下さい。
 Machine Translations:
 - If you have water, you will not need to find food. I will be a food. Don’t pile up water again.
-- If I bring you water, you will no longer have to look for food.I will be your food.Never put water on me again.
 - If you bring water, you won't have to look for food. I pretend to be a prey. Please don't even pile water on me again.
 - If you bring water, you won't have to look for food. I will be a food for Agata. Please do not load water again.
 Translation Note: None
-ASSISTANT: If I bring you water, then you don’t have to search for food. I will become your food. Don’t ever ask me for water again
+ASSISTANT: English: If I bring you water, then you don’t have to search for food. I will become your food. Don’t ever ask me for water again
 <!eop>
-USER: 僕の濃くて黒い羽は強く強力だ。冬には暖かくしてくれる。
+USER: Japanese: 僕の濃くて黒い羽は強く強力だ。冬には暖かくしてくれる。
 Machine Translations:
 - The dark and black feathers of the pet are strong and powerful. Warm in winter
-- My thick and black wings are strong and powerful.
 - My thick, black wings are strong and powerful. It warms you up in winter.
 - My dark, black wings are strong and powerful. It will be warm in winter.
 Translation Note: None
-ASSISTANT: My dark black feathers are strong and powerful. It keeps me warm in Winter.
+ASSISTANT: English: My dark black feathers are strong and powerful. It keeps me warm in Winter.
 <!eop>
-USER: ではベンノ「ありのまま」報告を
+USER: Japanese: ではベンノ「ありのまま」報告を
 Machine Translations:
 - Benno Report
-- Now, let's report Benno as he is.
 - Let's talk about Benno's "as is" report.
 - Then report "as it is"
 Translation Note: ベンノ = Benno
-ASSISTANT: Then, let’s hear Benno’s “as is” report.
+ASSISTANT: English: Then, let’s hear Benno’s “as is” report.
