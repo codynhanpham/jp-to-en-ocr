@@ -65,7 +65,7 @@ def newClipboardImageToText(allow_ja_text = False):
     pyperclip.copy("")
     return text
 
-def useDictionary(dictionary = None):
+def useDictionary(dictionary_file = None):
     useDictionary = booleanInput("\nUse custom dictionary? (y/n): ")
     if useDictionary == False:
         return None
@@ -83,12 +83,21 @@ def useDictionary(dictionary = None):
         print(f"[{i+1}] {dictionaryList[i]}")
 
     if len(dictionaryList) == 1:
-        dictionary = dictionaryList[0]
-        print(f"\nUsing dictionary: {dictionary}")
+        dictionary_file = dictionaryList[0]
+        dictionary = None
+        with open(path + "/custom-dictionary" + "/" + dictionary_file, encoding="utf-8") as f:
+            if f == None or f == "":
+                print("Invalid dictionary file. Skipped.")
+                return None
+            try:
+                dictionary = json.load(f)
+            except JSONDecodeError:
+                print("Invalid JSON file. Skipped.")
+                dictionary = None
     else:
         while True:
             try:
-                dictionary = dictionaryList[int(input("Choose dictionary: "))-1]
+                dictionary_file = dictionaryList[int(input("Choose dictionary: "))-1]
                 break
             except ValueError:
                 print("Invalid input. Please enter a number.")
@@ -97,7 +106,8 @@ def useDictionary(dictionary = None):
                 print("Invalid input. Please enter a number from the list.")
                 continue
 
-    with open(path + "/custom-dictionary" + "/" + dictionary, encoding="utf-8") as f:
+    dictionary = None
+    with open(path + "/custom-dictionary" + "/" + dictionary_file, encoding="utf-8") as f:
         if f == None or f == "":
             print("Invalid dictionary file. Skipped.")
             return None
@@ -107,7 +117,10 @@ def useDictionary(dictionary = None):
             print("Invalid JSON file. Skipped.")
             dictionary = None
     
-    return dictionary
+    return {
+        "dictionary_file": dictionary_file,
+        "dictionary": dictionary
+    }
 
 allTranslators = booleanInput("\nUse online translators (slower)? (y/n): ")
 
@@ -117,14 +130,11 @@ if allTranslators:
 
 dictionary = useDictionary()
 
-print(f'\n\nReady!\nUsing {dictionary if dictionary else "no"} dictionary\n\nand\n{"All" if allTranslators else "Offline"} translators.')
+print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if dictionary["dictionary"] else "no"} dictionary\nand\n{"All" if allTranslators else "Offline"} translators.')
 print("\nOK! Waiting for new screen snip...")
 
 
 def main():
-    f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
-    base_prompt = f.read()
-    f.close()
     f = open('ai_translate/system.txt', 'r', encoding="utf8")
     system = f.read()
     f.close()
@@ -136,6 +146,17 @@ def main():
             text = newClipboardImageToText(allow_ja_text=True)
 
             if (text != ""):
+                base_prompt = ""
+                # try open translationHistory.txt and read it, if file doesn't exist, use ai_translate/translationHistoryBase.txt instead
+                try:
+                    f = open('translationHistory.txt', 'r', encoding="utf8")
+                    base_prompt = f.read()
+                    f.close()
+                except FileNotFoundError:
+                    f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
+                    base_prompt = f.read()
+                    f.close()
+
                 AIInput = f"USER: Japanese: {text}\nMachine Translations:\n"
                 # Count the number of characters in the text and add it to the total
                 charsCount = len(text)
@@ -189,8 +210,9 @@ def main():
                     prompt_f = format_prompt(AIInput, base_prompt, system)
                     
                     # Write and keep overwriting the prompt to the file latest_prompt.txt
-                    with open("latest_prompt.txt", "w", encoding="utf-8") as f:
-                        f.write(prompt_f["prompt"])
+                    if config["DEV_SAVE_LATEST_PROMPT"] == "true":
+                        with open("latest_prompt.txt", "w", encoding="utf-8") as f:
+                            f.write(prompt_f["prompt"])
 
                     print("\x1b[1mAI TRANSLATION: \x1b[32m", end=" ", flush=True)
                     response = asyncio.run(ai_translate_stream(prompt_f["prompt"]))
@@ -200,8 +222,10 @@ def main():
                     if response["response_full"] == "":
                         response["response_full"] = response["machine_translations"][-1]
 
-                    # base_prompt = prompt_f["base_prompt"] + response["response_full"]
-
+                    base_prompt = prompt_f["base_prompt"] + response["response_full"]
+                    # Write the new base_prompt to translationHistory.txt
+                    with open("translationHistory.txt", "w", encoding="utf-8") as f:
+                        f.write(base_prompt)
 
                 # print(f"Characters translated: {charsCount}")
                 # print(f"(Total: {totalCharsCount})")
