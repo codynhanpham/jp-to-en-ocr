@@ -139,6 +139,10 @@ def main():
     system = f.read()
     f.close()
 
+    f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
+    base_prompt_base = f.read()
+    f.close()
+
     totalCharsCount = 0
     # Without AI
     while True:
@@ -147,15 +151,19 @@ def main():
 
             if (text != ""):
                 base_prompt = ""
-                # try open translationHistory.txt and read it, if file doesn't exist, use ai_translate/translationHistoryBase.txt instead
-                try:
-                    f = open('translationHistory.txt', 'r', encoding="utf8")
-                    base_prompt = f.read()
-                    f.close()
-                except FileNotFoundError:
-                    f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
-                    base_prompt = f.read()
-                    f.close()
+                if config["ROLLING_CONTEXT"] == "true":
+                    # try open translationHistory.txt and read it, if file doesn't exist, use ai_translate/translationHistoryBase.txt instead
+                    try:
+                        f = open('translationHistory.txt', 'r', encoding="utf8")
+                        base_prompt = f.read()
+                        f.close()
+                    except FileNotFoundError:
+                        f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
+                        base_prompt = f.read()
+                        f.close()
+                else:
+                    base_prompt = base_prompt_base
+                
 
                 AIInput = f"USER: Japanese: {text}\nMachine Translations:\n"
                 # Count the number of characters in the text and add it to the total
@@ -222,10 +230,11 @@ def main():
                     if response["response_full"] == "":
                         response["response_full"] = response["machine_translations"][-1]
 
-                    base_prompt = prompt_f["base_prompt"] + response["response_full"]
-                    # Write the new base_prompt to translationHistory.txt
-                    with open("translationHistory.txt", "w", encoding="utf-8") as f:
-                        f.write(base_prompt)
+                    if config["ROLLING_CONTEXT"] == "true":
+                        base_prompt = prompt_f["base_prompt"] + response["response_full"]
+                        # Write the new base_prompt to translationHistory.txt
+                        with open("translationHistory.txt", "w", encoding="utf-8") as f:
+                            f.write(base_prompt)
 
                 # print(f"Characters translated: {charsCount}")
                 # print(f"(Total: {totalCharsCount})")
