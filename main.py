@@ -130,7 +130,7 @@ if allTranslators:
 
 dictionary = useDictionary()
 
-print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if (dictionary and dictionary["dictionary_file"]) else "no"} dictionary\nand\n{"All" if allTranslators else "Offline"} translators.')
+print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if (dictionary and dictionary["dictionary"]) else "no"} dictionary\nand\n{"All" if allTranslators else "Offline"} translators.')
 print("\nOK! Waiting for new screen snip...")
 
 
@@ -174,14 +174,14 @@ def main():
                 # First, pre-process the text by replacing kana/terms for the actual official translations
                 trans_note = "Translation Note: " # add key = value here if key exists in text, otherwise None
                 used_pairs = [] # keep track of used key-value pairs
-                if not dictionary:
+                if not dictionary["dictionary"]:
                     trans_note += "None"
                 else:
                     # Keep track of which key = value pairs are used
-                    for key in dictionary:
+                    for key in dictionary["dictionary"]:
                         if key in text:
-                            text = text.replace(key, dictionary[key])
-                            used_pairs.append(f"{key} = {dictionary[key]}")
+                            text = text.replace(key, dictionary["dictionary"][key])
+                            used_pairs.append(f"{key} = {dictionary['dictionary'][key]}")
                     if used_pairs:
                         trans_note += ", ".join(used_pairs)
                     else:
