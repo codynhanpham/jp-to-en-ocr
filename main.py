@@ -130,7 +130,7 @@ if allTranslators:
 
 dictionary = useDictionary()
 
-print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if dictionary["dictionary"] else "no"} dictionary\nand\n{"All" if allTranslators else "Offline"} translators.')
+print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if (dictionary and dictionary["dictionary_file"]) else "no"} dictionary\nand\n{"All" if allTranslators else "Offline"} translators.')
 print("\nOK! Waiting for new screen snip...")
 
 
