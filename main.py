@@ -16,6 +16,7 @@ manga_ocr = MangaOcr()
 from argostranslate import package, translate
 print("\nLoading translation models...")
 # ARGOS_DEVICE_TYPE="CUDA" # Comment this out if you don't have a GPU
+
 package.install_from_path("translate-ja_en-1_1.argosmodel")
 installed_languages = translate.get_installed_languages()
 # for lang in installed_languages:
@@ -174,7 +175,7 @@ def main():
                 # First, pre-process the text by replacing kana/terms for the actual official translations
                 trans_note = "Translation Note: " # add key = value here if key exists in text, otherwise None
                 used_pairs = [] # keep track of used key-value pairs
-                if not dictionary["dictionary"]:
+                if not dictionary or not dictionary["dictionary"]:
                     trans_note += "None"
                 else:
                     # Keep track of which key = value pairs are used
