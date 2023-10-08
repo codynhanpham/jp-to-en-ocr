@@ -95,7 +95,7 @@ Note that you do not need the `torchaudio` library.
 
 You might need to install the CUDA Toolkit from NVIDIA: https://developer.nvidia.com/cuda-toolkit-archive
 
-Moreover, the script deliberately turns off CUDA if you are using AI-assisted translations (see [step 5](#5-optional-install-oobaboogatext-generation-webui-for-ai-assisted-translations)). This is because most of your VRAM will be used for loading the AI model, which is much more intensive than just doing OCR. If you want to use CUDA regardless, you can edit the `main.py` file manually.
+Moreover, the script deliberately turns off CUDA if you are using AI-assisted translations (see [step 5](#5-optional-install-oobaboogatext-generation-webui-for-ai-assisted-translations)). This is because most of your VRAM will be used for loading the AI model, which is much more intensive than just doing local machine translation. If you want to use CUDA regardless, you can edit the `main.py` file manually.
 
 </br>
 
