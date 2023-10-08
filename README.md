@@ -3,7 +3,7 @@ A scuff quality-of-life manga translator, using [manga_ocr](https://github.com/k
 
 ## Demo
 
-![](https://github.com/codynhanpham/jp-to-en-ocr/blob/master/jp-en_manga-ocr_demo_15s.gif?raw=true)
+![](jp-en_manga-ocr_demo_15s.gif)
 
 ## Why?
 - I'm ~not a weeb~
