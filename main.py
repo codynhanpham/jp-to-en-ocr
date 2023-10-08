@@ -15,7 +15,17 @@ manga_ocr = MangaOcr()
 
 from argostranslate import package, translate
 print("\nLoading translation models...")
-# ARGOS_DEVICE_TYPE="CUDA" # Comment this out if you don't have a GPU
+
+if config["USE_AI"] == "false":
+    # Use CUDA only if not using AI, as it's better to prioritize the AI over simple OCR
+    ARGOS_DEVICE_TYPE = "CUDA" # Also, comment this out if you don't have a GPU
+
+    # In the case you really want to have CUDA for this script
+    # You might have to uninstall the current torch and torchvision, then install the torch's CUDA version
+    # https://pytorch.org/get-started/locally/#start-locally
+    # 
+    # You might also need to have the correct CUDA version installed
+    # https://developer.nvidia.com/cuda-toolkit-archive
 
 package.install_from_path("translate-ja_en-1_1.argosmodel")
 installed_languages = translate.get_installed_languages()

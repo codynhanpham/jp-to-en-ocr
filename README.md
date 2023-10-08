@@ -14,6 +14,15 @@ A scuff quality-of-life manga translator, using [manga_ocr](https://github.com/k
 
 And because this script is literally under 160 lines of code.
 
+## Shiny! ~
+Why read a bunch of different machine translations when you can let AI do it for you?
+
+Well, AI is not all that great yet, but if you just want to read some manga, this would improve your immersion somewhat ~
+
+**YES! THAT'S RIGHT! This script can now use AI to translate your manga!** (See [step 5](#5-optional-install-oobaboogatext-generation-webui-for-ai-assisted-translations)). It will do all of the machine translations, and feed them into the AI model as references. The AI model will then generate a new translation based on these. More or less, it's combining the best of the translations into a coherent one.
+
+And if you really want to live on the edge, you can even enable rolling context as well! Which will use the previous translations as references for the next translation.
+
 ## How?
 
 ***Note: I have only tested this code on a Windows machine with NVIDIA GPU. In theory, things should work the same on Mac and Linux.***
@@ -76,7 +85,7 @@ Here: https://pytorch.org/get-started/locally/#start-locally
 
 In any case, the PyTorch installation command should look *something* like this:
 ```bash
-pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu117
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ```
 Note that you do not need the `torchaudio` library.
 
@@ -85,6 +94,8 @@ Note that you do not need the `torchaudio` library.
 *If you come here **after** all of the installations because the script did not utilize CUDA but used the CPU instead...*
 
 You might need to install the CUDA Toolkit from NVIDIA: https://developer.nvidia.com/cuda-toolkit-archive
+
+Moreover, the script deliberately turns off CUDA if you are using AI-assisted translations (see [step 5](#5-optional-install-oobaboogatext-generation-webui-for-ai-assisted-translations)). This is because most of your VRAM will be used for loading the AI model, which is much more intensive than just doing OCR. If you want to use CUDA regardless, you can edit the `main.py` file manually.
 
 </br>
 
@@ -106,7 +117,36 @@ pip3 install --no-deps EasyNMT==2.0.2
 
 </br>
 
-### 5. Pray and enjoy?
+### 5. (Optional) Install [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) for AI-assisted translations
+
+You can skip this step if you do not want to use this feature. ([Jump to next step](#6-pray-and-enjoy))
+
+The repo [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) offers a simple one-click installer. Follow the instruction on their repo to install the web UI.
+
+After that, launch the web UI, and go to the `Model` tab and download this following model: [TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ](https://huggingface.co/TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ). This is one of the best 7B models, which would fit into 8 GB of VRAM.
+
+You can simply paste in the name of the model into the `Download model or LoRA` field:
+```txt
+TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ
+```
+
+After the model is downloaded, you can update the `CMD-FLAGS.txt` file in the `text-generation-webui` folder to use the model you just downloaded, as well as opting in for the api extension. Copy this line into the `CMD-FLAGS.txt` file:
+```txt
+--model TheBloke_airoboros-l2-7B-gpt4-m2.0-GPTQ --model_type llama --loader exllama_hf --listen-port 7860 --extensions api
+```
+
+**Back to this repo's folder**
+
+To enable AI translation, update the `.env` file with the correct URL for the webui websocket and HTTP server. Also, change the `USE_AI` flag to `True`:
+```txt
+AI_HOST_WS_URL="ws://127.0.0.1:5005/api/v1/stream" # or whatever the URL is
+AI_HOST_HTTP_URL="http://127.0.0.1:5000/api/v1" # or whatever the URL is
+USE_AI="true"
+```
+
+</br>
+
+### 6. Pray and enjoy?
 
 #### *On Windows*
 
@@ -139,7 +179,7 @@ It will download the Optical Character Recognition (OCR) model, as well as 3 dif
 
 ### 1. Start up the script
 
-Exactly as described in the `How?` section above [@ step 5](#5-pray-and-enjoy).
+Exactly as described in the `How?` section above [@ step 6](#6-pray-and-enjoy).
 
 
 ### 2. Select a few options
