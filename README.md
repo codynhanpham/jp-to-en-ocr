@@ -23,6 +23,10 @@ Well, AI is not all that great yet, but if you just want to read some manga, thi
 
 And if you really want to live on the edge, you can even enable rolling context as well! Which will use the previous translations as references for the next translation.
 
+***This feature was tested for compatibility with text-generation-webui [snapshot 2023-10-29](https://github.com/oobabooga/text-generation-webui/releases/tag/snapshot-2023-10-29)***
+
+!!!! *The snapshot-2023-11-05 has an API breaking change. An update is in-coming.*
+
 ## How?
 
 ***Note: I have only tested this code on a Windows machine with NVIDIA GPU. In theory, things should work the same on Mac and Linux.***
@@ -228,6 +232,7 @@ Or just close the terminal window.
 3. [translators](https://github.com/uliontse/translators)
 4. [EasyNMT](https://github.com/UKPLab/EasyNMT)
 5. [pyperclip](https://github.com/asweigart/pyperclip)
+6. [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui)
 
 ## Issues
 This was made for my personal, selfish use. I will try to update or patch any bug whenever I feel like it. Again, it's literally 160 lines. Suggestions are welcome, though <3

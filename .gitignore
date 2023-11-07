@@ -8,6 +8,5 @@ venv
 ai-translate_api
 ai-translate_api.zip
 offline_models.zip
-latest_prompt.txt
-translationHistory.txt
+translationHistory.json
 *__pycache__

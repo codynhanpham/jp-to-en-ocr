@@ -4,17 +4,27 @@ from json.decoder import JSONDecodeError
 from PIL import ImageGrab
 import pyperclip
 import os, sys
+import html
 from langdetect import detect
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
-from ai_translate.ai_translate import ai_translate_stream, format_prompt
+try:
+    import websockets
+except ImportError:
+    print("Websockets package not found. Make sure it's installed.")
+
+URI = config["AI_HOST_WS_URL"]
 
 from manga_ocr import MangaOcr
 manga_ocr = MangaOcr()
 
-from argostranslate import package, translate
 print("\nLoading translation models...")
+
+from argostranslate import package, translate
+from sentence_transformers import SentenceTransformer
+language_model = SentenceTransformer('distilbert-base-nli-mean-tokens')
+import torch.nn
 
 if config["USE_AI"] == "false":
     # Use CUDA only if not using AI, as it's better to prioritize the AI over simple OCR
@@ -44,6 +54,103 @@ model1.translate("だけど", source_lang="ja", target_lang="en", beam_size=15, 
 
 print("Offline models loaded!")
 
+
+async def run(user_input, history):
+    request = {
+        'user_input': user_input,
+        'max_new_tokens': 500,
+        'auto_max_new_tokens': False,
+        'max_tokens_second': 0,
+        'history': history,
+        'mode': 'chat-instruct',
+        'character': 'Example',
+        'your_name': 'You',
+        'regenerate': False,
+        '_continue': False,
+        'chat_instruct_command': 'Enter translator mode. You are a professional Japanese translator. You must do your best to translate the text provided into English as detailed and accurate as possible. You can sometimes sacrifice accuracy over natural-sounding English. Use the machine translations as a reference to improve your own. Do not come up with something entirely new yourself. If the machine translation does not make sense, say "(Cannot translate)". You must always honor the translation notes.\n\n<|prompt|>',
+
+        'preset': 'None',
+        'do_sample': True,
+        'temperature': 0.65,
+        'top_p': 0.2,
+        'typical_p': 1,
+        'epsilon_cutoff': 0,  # In units of 1e-4
+        'eta_cutoff': 0,  # In units of 1e-4
+        'tfs': 1,
+        'top_a': 0,
+        'repetition_penalty': 1.16,
+        'presence_penalty': 0,
+        'frequency_penalty': 0,
+        'repetition_penalty_range': 0,
+        'top_k': 40,
+        'min_length': 0,
+        'no_repeat_ngram_size': 0,
+        'num_beams': 1,
+        'penalty_alpha': 0,
+        'length_penalty': 1,
+        'early_stopping': False,
+        'mirostat_mode': 0,
+        'mirostat_tau': 5,
+        'mirostat_eta': 0.1,
+        'grammar_string': '',
+        'guidance_scale': 1,
+        'negative_prompt': '',
+
+        'seed': -1,
+        'add_bos_token': True,
+        'truncation_length': 2048,
+        'ban_eos_token': False,
+        'custom_token_bans': '',
+        'skip_special_tokens': True,
+        'stopping_strings': []
+    }
+
+    async with websockets.connect(URI, ping_interval=None) as websocket:
+        await websocket.send(json.dumps(request))
+
+        while True:
+            incoming_data = await websocket.recv()
+            incoming_data = json.loads(incoming_data)
+
+            match incoming_data['event']:
+                case 'text_stream':
+                    yield incoming_data['history']
+                case 'stream_end':
+                    return
+
+
+async def print_response_stream(user_input, history) -> str:
+    cur_len = 0
+    new_history = None
+    async for new_history in run(user_input, history):
+        cur_message = new_history['visible'][-1][1][cur_len:]
+        cur_len += len(cur_message)
+        print(html.unescape(cur_message), end='')
+        sys.stdout.flush()  # If we don't flush, we won't see tokens in realtime.
+
+        new_history = new_history
+
+    return new_history
+
+
+def passed_similarity_score(sentences: list, mode: str) -> bool:
+    threshold = 0.72
+    sentence_embeddings = language_model.encode(sentences)
+    cos = torch.nn.CosineSimilarity(dim=0, eps=1e-6)
+    b = torch.from_numpy(sentence_embeddings)
+    max_similarity = max([cos(b[0], b[i]) for i in range(1, len(b))])
+    mean_similarity = sum([cos(b[0], b[i]) for i in range(1, len(b))]) / (len(b) - 1)
+
+    if mode == "max":
+        print(f"Similarity (max): {max_similarity.item()}")
+        return max_similarity.item() > threshold
+    elif mode == "mean":
+        print(f"Similarity (mean): {mean_similarity.item()}")
+        return mean_similarity.item() > threshold
+    
+    return False
+
+
 def booleanInput(prompt):
     while True:
         try:
@@ -51,6 +158,7 @@ def booleanInput(prompt):
         except KeyError:
             print('Invalid input. Please enter "yes" or "no".')
             continue
+
 
 def newClipboardImageToText(allow_ja_text = False):
     text = ""
@@ -74,7 +182,8 @@ def newClipboardImageToText(allow_ja_text = False):
         text = manga_ocr(img)
 
     pyperclip.copy("")
-    return text
+    return text.strip()
+
 
 def useDictionary(dictionary_file = None):
     useDictionary = booleanInput("\nUse custom dictionary? (y/n): ")
@@ -133,7 +242,8 @@ def useDictionary(dictionary_file = None):
         "dictionary": dictionary
     }
 
-allTranslators = booleanInput("\nUse online translators (slower)? (y/n): ")
+
+allTranslators = booleanInput("\nUse online translators (need internet connection)? (y/n): ")
 
 if allTranslators:
     import translators as ts
@@ -145,111 +255,118 @@ print(f'\n\nReady!\nUsing {dictionary["dictionary_file"] if (dictionary and dict
 print("\nOK! Waiting for new screen snip...")
 
 
+base_history = {'internal': [], 'visible': []}
+# try to use the ./base_history.json if it exists to replace the history variable
+try:
+    with open('ai_translate/base_history.json', 'r', encoding='utf-8') as f:
+        base_history = json.load(f)
+except:
+    pass
+
+
+
 def main():
-    f = open('ai_translate/system.txt', 'r', encoding="utf8")
-    system = f.read()
-    f.close()
-
-    f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
-    base_prompt_base = f.read()
-    f.close()
-
     totalCharsCount = 0
-    # Without AI
     while True:
         try:
             text = newClipboardImageToText(allow_ja_text=True)
 
-            if (text != ""):
-                base_prompt = ""
-                if config["ROLLING_CONTEXT"] == "true":
-                    # try open translationHistory.txt and read it, if file doesn't exist, use ai_translate/translationHistoryBase.txt instead
-                    try:
-                        f = open('translationHistory.txt', 'r', encoding="utf8")
-                        base_prompt = f.read()
-                        f.close()
-                    except FileNotFoundError:
-                        f = open('ai_translate/translationHistoryBase.txt', 'r', encoding="utf8")
-                        base_prompt = f.read()
-                        f.close()
+            if (text == ""):
+                continue
+
+
+            history = {}
+            if config["ROLLING_CONTEXT"] == "true":
+                # try open translationHistory.json and read it, if file doesn't exist, use the base_history instead
+                try:
+                    with open('translationHistory.json', 'r', encoding='utf-8') as f:
+                        history = json.load(f)
+                except FileNotFoundError:
+                    history = base_history
+            else:
+                history = base_history
+            
+
+            AIInput = f"{text}\nMachine Translations:\n"
+            # Count the number of characters in the text and add it to the total
+            charsCount = len(text)
+            totalCharsCount += charsCount
+            print("ORIGINAL:     \t" +"\x1b[33m" + text + "\x1b[0m")
+
+            # First, pre-process the text by replacing kana/terms for the actual official translations
+            trans_note = "Translation Note: " # add key = value here if key exists in text, otherwise None
+            used_pairs = [] # keep track of used key-value pairs
+            if not dictionary or not dictionary["dictionary"]:
+                trans_note += "None"
+            else:
+                # Keep track of which key = value pairs are used
+                for key in dictionary["dictionary"]:
+                    if key in text:
+                        text = text.replace(key, dictionary["dictionary"][key])
+                        used_pairs.append(f"{key} = {dictionary['dictionary'][key]}")
+                if used_pairs:
+                    trans_note += ", ".join(used_pairs)
                 else:
-                    base_prompt = base_prompt_base
-                
-
-                AIInput = f"USER: Japanese: {text}\nMachine Translations:\n"
-                # Count the number of characters in the text and add it to the total
-                charsCount = len(text)
-                totalCharsCount += charsCount
-                print("ORIGINAL:     \t" +"\x1b[33m" + text + "\x1b[0m")
-
-                # First, pre-process the text by replacing kana/terms for the actual official translations
-                trans_note = "Translation Note: " # add key = value here if key exists in text, otherwise None
-                used_pairs = [] # keep track of used key-value pairs
-                if not dictionary or not dictionary["dictionary"]:
                     trans_note += "None"
-                else:
-                    # Keep track of which key = value pairs are used
-                    for key in dictionary["dictionary"]:
-                        if key in text:
-                            text = text.replace(key, dictionary["dictionary"][key])
-                            used_pairs.append(f"{key} = {dictionary['dictionary'][key]}")
-                    if used_pairs:
-                        trans_note += ", ".join(used_pairs)
-                    else:
-                        trans_note += "None"
 
-                # Then, machine translate the text
-                
-                trans00 = model0.translate(text)
-                AIInput += "- " + trans00 + "\n"
+
+            # Then, machine translate the text
+            trans00 = model0.translate(text).strip()
+            AIInput += "- " + trans00 + "\n"
+            if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
+                print("\x1b[1m" + "TRANSLATION 0.0:  " + "\x1b[32m" + trans00 + "\x1b[0m")
+
+            if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
+                trans01 = model1.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250).strip()
+                print("\x1b[1m" + "TRANSLATION 0.1:  " + "\x1b[32m" + trans01 + "\x1b[0m")
+
+            # if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
+            #     trans02 = model2.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
+            #     print("\x1b[1m" + "TRANSLATION 0.2:  " + "\x1b[32m" + trans02 + "\x1b[0m")
+
+            if allTranslators:
+                trans1 = tss.bing(text, from_language="ja", to_language="en").strip()
+                AIInput += "- " + trans1 + "\n"
+                trans2 = tss.google(text, from_language="ja", to_language="en").strip()
+                AIInput += "- " + trans2 + "\n"
                 if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
-                    print("\x1b[1m" + "TRANSLATION 0.0:  " + "\x1b[32m" + trans00 + "\x1b[0m")
+                    print("\x1b[1m" + "TRANSLATION 1:    " + "\x1b[32m" + trans1 + "\x1b[0m")
+                    print("\x1b[1m" + "TRANSLATION 2:    " + "\x1b[32m" + trans2 + "\x1b[0m")
 
-                if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
-                    trans01 = model1.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
-                    print("\x1b[1m" + "TRANSLATION 0.1:  " + "\x1b[32m" + trans01 + "\x1b[0m")
+            AIInput += trans_note
 
-                # if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
-                #     trans02 = model2.translate(text, source_lang="ja", target_lang="en", beam_size=15, max_length=250)
-                #     print("\x1b[1m" + "TRANSLATION 0.2:  " + "\x1b[32m" + trans02 + "\x1b[0m")
 
-                if allTranslators:
-                    trans1 = tss.bing(text, from_language="ja", to_language="en")
-                    AIInput += "- " + trans1 + "\n"
-                    trans2 = tss.google(text, from_language="ja", to_language="en")
-                    AIInput += "- " + trans2 + "\n"
-                    if config["USE_AI"] == "false" or config["SHOW_ML"] == "true":
-                        print("\x1b[1m" + "TRANSLATION 1:    " + "\x1b[32m" + trans1 + "\x1b[0m")
-                        print("\x1b[1m" + "TRANSLATION 2:    " + "\x1b[32m" + trans2 + "\x1b[0m")
+            # If AI is enabled, use the AI to translate the text
+            if config["USE_AI"] == "true":
+                print("\x1b[1mAI TRANSLATION: \x1b[32m", end=" ", flush=True)
+                history = asyncio.run(print_response_stream(AIInput, history))
+                print("\x1b[0m\n")
 
-                AIInput += trans_note + "\nASSISTANT: English: "
-
-                # If AI is enabled, use the AI to translate the text
-                if config["USE_AI"] == "true":
-                    prompt_f = format_prompt(AIInput, base_prompt, system)
+                # passed_sim = passed_similarity_score([history['internal'][-1][1], trans00, trans1, trans2], "mean")
+                # trans1 and trans2 might not exist, so if this is the case, check and only pass the ones that exist
+                passed_sim = passed_similarity_score([history['internal'][-1][1], trans00] + ([trans1] if allTranslators else []) + ([trans2] if allTranslators else []), "mean")
                     
-                    # Write and keep overwriting the prompt to the file latest_prompt.txt
-                    if config["DEV_SAVE_LATEST_PROMPT"] == "true":
-                        with open("latest_prompt.txt", "w", encoding="utf-8") as f:
-                            f.write(prompt_f["prompt"])
 
-                    print("\x1b[1mAI TRANSLATION: \x1b[32m", end=" ", flush=True)
-                    response = asyncio.run(ai_translate_stream(prompt_f["prompt"]))
-                    print("\x1b[0m\n")
+                if not passed_sim:
+                    print("\x1b[31m(Possibly bad AI result! Check the Machine Translations below.)\x1b[0m\n")
 
-                    # Check if response["response_full"] is empty, if so, use the the last ML translation as the log
-                    if response["response_full"] == "":
-                        response["response_full"] = response["machine_translations"][-1]
+                    print("\x1b[2m")
+                    print(history['internal'][-1][0])
+                    print("\n\x1b[0m")
 
-                    if config["ROLLING_CONTEXT"] == "true":
-                        base_prompt = prompt_f["base_prompt"] + response["response_full"]
-                        # Write the new base_prompt to translationHistory.txt
-                        with open("translationHistory.txt", "w", encoding="utf-8") as f:
-                            f.write(base_prompt)
+                if config["ROLLING_CONTEXT"] == "true":
+                    # Use the history variable to write to translationHistory.json. Only the ["internal"] part is needed, so set the ["visible"] part to []
+                    # if not passed_sim, though, pop the last item from history['internal']
+                    if not passed_sim:
+                        history['internal'].pop()
 
-                # print(f"Characters translated: {charsCount}")
-                # print(f"(Total: {totalCharsCount})")
-                print("")
+                    new_history = { "internal": history['internal'], "visible": [] }
+                    with open('translationHistory.json', 'w', encoding='utf-8') as f:
+                        json.dump(new_history, f, indent=4, ensure_ascii=False)
+
+            # print(f"Characters translated: {charsCount}")
+            # print(f"(Total: {totalCharsCount})")
+            print("\n")
 
         except KeyboardInterrupt:
             break
