@@ -25,6 +25,7 @@
     "神殿長": "High Bishop",
     "貴族街": "noble quarter",
     "下町": "lower city",
+    "貴族院": "Royal Academy",
 
     "リンシャン": "rinsham",
 
@@ -95,6 +96,11 @@
     "ルーフェン": "Rauffen",
     "ソランジュ": "Solange",
 
+    "トラオクヴァール": "Trauerqual",
+    "ジギスヴァルト": "Sigiswald",
+    "アナスタージウス": "Anastasius",
+    "ヒルデブラント": "Hildebrand",
+
     "フリュートレーネ": "Flutrane",
     "ライデンシャフト": "Leidenschaft",
     "シュツェーリア": "Schutzaria",
@@ -130,6 +136,42 @@
     "レーデ": "Lehde",
     "ライゼガング": "Leisegang",
     "ロウィンワルト": "Reunwalt",
-    "ヴィルトル": "Wiltord"
+    "ヴィルトル": "Wiltord",
 
+    "シュミル": "shumil",
+    "シュバルツ": "Schwartz",
+    "ヴァイス": "Weiss",
+
+    "魔獣": "feybeasts",
+    "魔木": "feyplants",
+    "魔石": "feystones",
+
+    "アオスヴァール": "Auswahl",
+    "アクスト": "Axt",
+    "バイメーン": "Baimen",
+    "エントヴァフヌング": "Entwaffnung",
+    "フィンスウンハン": "Finsumhang",
+    "ゲッティルト": "Geteilt",
+    "グルトリスハイト": "Grutrissheit",
+    "ランツェ": "Lanze",
+    "メッサー": "Messer",
+    "オルドナンツ": "Ordonnanz",
+    "リーズィッヒェル": "Riesesichel",
+    "ロート": "Rott",
+    "リューケン": "Rucken",
+    "シェーレ": "Schere",
+    "シュタープ": "schtappe",
+    "シュヴェールト": "Schwert",
+    "シュピーゲルン": "Spiegeln",
+    "シュトレイトコルベン": "Streitkolben",
+    "スティロ": "Stylo",
+    "ヴァッシェン": "Waschen",
+
+    "ユレーヴェ": "jureve",
+    "激マズ回復薬": "ultra-nasty-potion",
+    "優しさ入りのお薬": "kindness-infused potion",
+    "完璧薬": "blenrus potion",
+
+    "領地対抗戦": "interduchy tournament",
+    "ディッター": "ditter"
 }
