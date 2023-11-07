@@ -176,8 +176,6 @@ def openai_run(user_input, history):
             print(f"Error parsing JSON: {e}")
         chunk = ''  # Reset the chunk for the next iteration
 
-    print()
-
     # construct the new history
     history['internal'].append([user_input, message_collected])
 

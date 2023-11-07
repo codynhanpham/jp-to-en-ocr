@@ -23,9 +23,11 @@ Well, AI is not all that great yet, but if you just want to read some manga, thi
 
 And if you really want to live on the edge, you can even enable rolling context as well! Which will use the previous translations as references for the next translation.
 
-***This feature was tested for compatibility with text-generation-webui [snapshot 2023-10-29](https://github.com/oobabooga/text-generation-webui/releases/tag/snapshot-2023-10-29)***
+***This feature was tested for compatibility with [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) [snapshot 2023-11-05](https://github.com/oobabooga/text-generation-webui/releases/tag/snapshot-2023-11-05) using the "new" OpenAI API format. The legacy ws stream method is still being kept in the code for now, even though it's not being used.***
 
-!!!! *The snapshot-2023-11-05 has an API breaking change. An update is in-coming.*
+!!!! *[oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) has been pushing out some API-breaking updates recently. I will try to keep up with it, though there is no guarantee that my update will be in time. If the AI feature fails, you can always fallback to the machine translation default.*
+
+</br>
 
 ## How?
 
@@ -127,16 +129,16 @@ You can skip this step if you do not want to use this feature. ([Jump to next st
 
 The repo [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) offers a simple one-click installer. Follow the instruction on their repo to install the web UI.
 
-After that, launch the web UI, and go to the `Model` tab and download this following model: [TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ](https://huggingface.co/TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ). This is one of the best 7B models, which would fit into 8 GB of VRAM.
+After that, launch the web UI, and go to the `Model` tab and download this following model: [TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ](https://huggingface.co/TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ). This is one of the best 7B models, which would fit into 8 GB of VRAM.
 
 You can simply paste in the name of the model into the `Download model or LoRA` field:
 ```txt
-TheBloke/airoboros-l2-7B-gpt4-m2.0-GPTQ
+TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ
 ```
 
 After the model is downloaded, you can update the `CMD-FLAGS.txt` file in the `text-generation-webui` folder to use the model you just downloaded, as well as opting in for the api extension. Copy this line into the `CMD-FLAGS.txt` file:
 ```txt
---model TheBloke_airoboros-l2-7B-gpt4-m2.0-GPTQ --model_type llama --loader exllama_hf --listen-port 7860 --extensions api
+--model TheBloke_airoboros-l2-7B-gpt4-2.0-GPTQ --loader exllama_hf --listen-port 7860 --extensions openai
 ```
 
 **Back to this repo's folder**
