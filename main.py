@@ -134,7 +134,7 @@ async def print_response_stream(user_input, history) -> str:
 
 
 def passed_similarity_score(sentences: list, mode: str) -> bool:
-    threshold = 0.72
+    threshold = 0.785
     sentence_embeddings = language_model.encode(sentences)
     cos = torch.nn.CosineSimilarity(dim=0, eps=1e-6)
     b = torch.from_numpy(sentence_embeddings)
