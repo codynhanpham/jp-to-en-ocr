@@ -7,6 +7,7 @@ import os, sys
 import html
 from langdetect import detect
 from dotenv import dotenv_values
+import requests
 config = dotenv_values(".env")
 
 try:
@@ -15,6 +16,7 @@ except ImportError:
     print("Websockets package not found. Make sure it's installed.")
 
 URI = config["AI_HOST_WS_URL"]
+OPENAI_COMPATIBLE_URI = 'http://127.0.0.1:5000/v1/chat/completions'
 
 from manga_ocr import MangaOcr
 manga_ocr = MangaOcr()
@@ -54,59 +56,59 @@ model1.translate("だけど", source_lang="ja", target_lang="en", beam_size=15, 
 
 print("Offline models loaded!")
 
+request = {
+    'max_new_tokens': 500,
+    'auto_max_new_tokens': False,
+    'max_tokens_second': 0,
+    'mode': 'chat-instruct',
+    'character': 'Assistant',
+    'regenerate': False,
+    '_continue': False,
+    'chat_instruct_command': 'Enter translator mode. You are a professional Japanese translator. You must do your best to translate the text provided into English as detailed and accurate as possible. You can sometimes sacrifice accuracy over natural-sounding English. Use the machine translations as a reference to improve your own. Do not come up with something entirely new yourself. If the machine translation does not make sense, say "(Cannot translate)". You must always honor the translation notes.\n\n<|prompt|>',
+
+    'preset': 'None',
+    'do_sample': True,
+    'temperature': 0.65,
+    'top_p': 0.2,
+    'typical_p': 1,
+    'epsilon_cutoff': 0,  # In units of 1e-4
+    'eta_cutoff': 0,  # In units of 1e-4
+    'tfs': 1,
+    'top_a': 0,
+    'repetition_penalty': 1.16,
+    'presence_penalty': 0,
+    'frequency_penalty': 0,
+    'repetition_penalty_range': 0,
+    'top_k': 40,
+    'min_length': 0,
+    'no_repeat_ngram_size': 0,
+    'num_beams': 1,
+    'penalty_alpha': 0,
+    'length_penalty': 1,
+    'early_stopping': False,
+    'mirostat_mode': 0,
+    'mirostat_tau': 5,
+    'mirostat_eta': 0.1,
+    'grammar_string': '',
+    'guidance_scale': 1,
+    'negative_prompt': '',
+
+    'seed': -1,
+    'add_bos_token': True,
+    'truncation_length': 2048,
+    'ban_eos_token': False,
+    'custom_token_bans': '',
+    'skip_special_tokens': True,
+    'stopping_strings': []
+}
 
 async def run(user_input, history):
-    request = {
-        'user_input': user_input,
-        'max_new_tokens': 500,
-        'auto_max_new_tokens': False,
-        'max_tokens_second': 0,
-        'history': history,
-        'mode': 'chat-instruct',
-        'character': 'Example',
-        'your_name': 'You',
-        'regenerate': False,
-        '_continue': False,
-        'chat_instruct_command': 'Enter translator mode. You are a professional Japanese translator. You must do your best to translate the text provided into English as detailed and accurate as possible. You can sometimes sacrifice accuracy over natural-sounding English. Use the machine translations as a reference to improve your own. Do not come up with something entirely new yourself. If the machine translation does not make sense, say "(Cannot translate)". You must always honor the translation notes.\n\n<|prompt|>',
-
-        'preset': 'None',
-        'do_sample': True,
-        'temperature': 0.65,
-        'top_p': 0.2,
-        'typical_p': 1,
-        'epsilon_cutoff': 0,  # In units of 1e-4
-        'eta_cutoff': 0,  # In units of 1e-4
-        'tfs': 1,
-        'top_a': 0,
-        'repetition_penalty': 1.16,
-        'presence_penalty': 0,
-        'frequency_penalty': 0,
-        'repetition_penalty_range': 0,
-        'top_k': 40,
-        'min_length': 0,
-        'no_repeat_ngram_size': 0,
-        'num_beams': 1,
-        'penalty_alpha': 0,
-        'length_penalty': 1,
-        'early_stopping': False,
-        'mirostat_mode': 0,
-        'mirostat_tau': 5,
-        'mirostat_eta': 0.1,
-        'grammar_string': '',
-        'guidance_scale': 1,
-        'negative_prompt': '',
-
-        'seed': -1,
-        'add_bos_token': True,
-        'truncation_length': 2048,
-        'ban_eos_token': False,
-        'custom_token_bans': '',
-        'skip_special_tokens': True,
-        'stopping_strings': []
-    }
+    data = request.copy()
+    data['user_input'] = user_input
+    data['history'] = history
 
     async with websockets.connect(URI, ping_interval=None) as websocket:
-        await websocket.send(json.dumps(request))
+        await websocket.send(json.dumps(data))
 
         while True:
             incoming_data = await websocket.recv()
@@ -131,6 +133,56 @@ async def print_response_stream(user_input, history) -> str:
         new_history = new_history
 
     return new_history
+
+
+# compatible with the openai api
+def openai_run(user_input, history):
+    openai_base_history = []
+    for i in range(len(history['internal'])):
+        openai_base_history.append({"role": "user", "content": history['internal'][i][0]})
+        openai_base_history.append({"role": "assistant", "content": history['internal'][i][1]})
+
+    openai_base_history.append({"role": "user", "content": user_input})
+
+    data = request.copy()
+    data['messages'] = openai_base_history
+    data['stream'] = True
+    headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+    message_collected = ""
+
+    response = requests.post(OPENAI_COMPATIBLE_URI, headers=headers, json=data, stream=True)
+    
+    # Initialize an empty string to accumulate the response chunks
+    chunk = ''
+    for line in response.iter_lines(decode_unicode=True):
+        if not line:
+            continue
+
+        chunk += line
+
+        if not line.startswith("data: "):
+            continue
+
+        # Indicates the end of a chunk
+        try:
+            # Extract and parse the JSON data
+            data_chunk = chunk[len("data: "):]
+            data_json = json.loads(data_chunk)
+
+            message_collected += data_json['choices'][0]['message']['content']
+            print(data_json['choices'][0]['message']['content'], end='')
+
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON: {e}")
+        chunk = ''  # Reset the chunk for the next iteration
+
+    print()
+
+    # construct the new history
+    history['internal'].append([user_input, message_collected])
+
+    return history
+
 
 
 def passed_similarity_score(sentences: list, mode: str) -> bool:
@@ -264,7 +316,6 @@ except:
     pass
 
 
-
 def main():
     totalCharsCount = 0
     while True:
@@ -339,10 +390,10 @@ def main():
             # If AI is enabled, use the AI to translate the text
             if config["USE_AI"] == "true":
                 print("\x1b[1mAI TRANSLATION: \x1b[32m", end=" ", flush=True)
-                history = asyncio.run(print_response_stream(AIInput, history))
+                # history = asyncio.run(print_response_stream(AIInput, history)) # legacy oobabooga API: https://github.com/oobabooga/text-generation-webui/blob/6086768309f49be88fce3c0c5e7e6a7a0b3fb735/api-examples/api-example-chat-stream.py
+                history = openai_run(AIInput, history)
                 print("\x1b[0m\n")
 
-                # passed_sim = passed_similarity_score([history['internal'][-1][1], trans00, trans1, trans2], "mean")
                 # trans1 and trans2 might not exist, so if this is the case, check and only pass the ones that exist
                 passed_sim = passed_similarity_score([history['internal'][-1][1], trans00] + ([trans1] if allTranslators else []) + ([trans2] if allTranslators else []), "mean")
                     

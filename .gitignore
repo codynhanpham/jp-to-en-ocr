@@ -10,3 +10,4 @@ ai-translate_api.zip
 offline_models.zip
 translationHistory.json
 *__pycache__
+test.py
