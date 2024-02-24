@@ -1,3 +1,6 @@
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
 import json
 from json.decoder import JSONDecodeError
 from PIL import ImageGrab
@@ -24,16 +27,17 @@ def openai_run(user_input, history, params, HOST):
     data = params.copy()
     data['messages'] = openai_base_history
     data['stream'] = True
-    headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+    headers = { "Content-Type": "application/json" }
     message_collected = ""
 
-    response = requests.post(OPENAI_COMPATIBLE_URI, headers=headers, json=data, stream=True)
+    response = requests.post(OPENAI_COMPATIBLE_URI, headers=headers, json=data, verify=False, stream=True)
     client = sseclient.SSEClient(response)
 
     for event in client.events():
         try:
             payload = json.loads(event.data)
-            chunk = payload['choices'][0]['message']['content']
+            # chunk = payload['choices'][0]['message']['content'] # does not seems to work anymore...
+            chunk = payload['choices'][0]['delta']['content']
             message_collected += chunk
             print(chunk, end='')
 

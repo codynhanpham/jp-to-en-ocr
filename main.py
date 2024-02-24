@@ -45,10 +45,11 @@ print("\nTrained models loaded!\n")
 # ----------------- Doing actual work -----------------
 
 request = {
-    'max_new_tokens': 500,
+    'max_new_tokens': 600,
     'auto_max_new_tokens': False,
     'max_tokens_second': 0,
     'mode': 'chat-instruct',
+    'instruction_template': 'None',
     'character': 'Assistant',
     'regenerate': False,
     '_continue': False,
@@ -56,8 +57,8 @@ request = {
 
     'preset': 'None',
     'do_sample': True,
-    'temperature': 0.65,
-    'top_p': 0.2,
+    'temperature': 0.69,
+    'top_p': 0.23,
     'typical_p': 1,
     'epsilon_cutoff': 0,  # In units of 1e-4
     'eta_cutoff': 0,  # In units of 1e-4
@@ -68,7 +69,7 @@ request = {
     'frequency_penalty': 0,
     'repetition_penalty_range': 0,
     'top_k': 40,
-    'min_length': 0,
+    'min_length': 1,
     'no_repeat_ngram_size': 0,
     'num_beams': 1,
     'penalty_alpha': 0,

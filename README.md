@@ -140,23 +140,40 @@ The repo [oobabooga/text-generation-webui](https://github.com/oobabooga/text-gen
 
 After that, launch the web UI, and go to the `Model` tab and download this following model: [TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ](https://huggingface.co/TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ). This is one of the best 7B models, which would fit into 8 GB of VRAM.
 
+Another newer model I have tested with and can recommend is [TheBloke/UNA-TheBeagle-7B-v1-GPTQ](https://huggingface.co/TheBloke/UNA-TheBeagle-7B-v1-GPTQ/tree/gptq-4bit-32g-actorder_True). Feel free to test things out!!
+
 You can simply paste in the name of the model into the `Download model or LoRA` field:
 ```txt
 TheBloke/airoboros-l2-7B-gpt4-2.0-GPTQ
+
+or
+
+TheBloke/UNA-TheBeagle-7B-v1-GPTQ:gptq-4bit-32g-actorder_True
 ```
 
-After the model is downloaded, you can update the `CMD-FLAGS.txt` file in the `text-generation-webui` folder to use the model you just downloaded, as well as opting in for the API extension. Copy this line into the `CMD-FLAGS.txt` file:
+After the model is downloaded, you can update the `CMD-FLAGS.txt` file in the `text-generation-webui` folder to use the model you just downloaded, as well as opting in for the API extension. Copy this line into the `CMD-FLAGS.txt` file, edit the model name if necessary:
 ```txt
---model TheBloke_airoboros-l2-7B-gpt4-2.0-GPTQ --loader exllama_hf --listen-port 7860 --extensions openai
+--model TheBloke_airoboros-l2-7B-gpt4-2.0-GPTQ --use_flash_attention_2 --listen-port 7860 --api
 ```
+*(Note that the model name for the `CMD-FLAGS.txt` file is the ***folder name*** of the model. In the `text-generation-webui` app directory, go to `./models` and copy the appropriate folder name.)*
 
-**Back to this repo's folder**
+</br>
+
+**Then, Back to this repo's folder**
 
 To enable AI translation, update the `.env` file with the correct URL for the API server process. Also, change the `USE_AI` flag to `true`:
 ```yml
-AI_API_SERVER="http://127.0.0.1:5000" # or whatever the URL is
+AI_API_SERVER="http://127.0.0.1:5000" # or whatever the URL is for OPEN AI API server
 USE_AI="true"
+
+# If you want to see the machine translations along with the AI translation every time, set this to true
+SHOW_ML="true" # only have effect if USE_AI is true
 ```
+By default, if you are using AI translation, the machine translations will not be shown, just for conciseness.
+
+But you will also note that there is a `Similarity` score for the AI translations. This is the score of the AI translation compared to the machine translations, to give you the feeling of how "creative" (or hallucinative) the AI is. If the quality of the AI translation is not good, the machine translations will be shown as well for additional context.
+
+If you want to always show the machine translations, set `SHOW_ML` to `true`.
 
 </br>
 
@@ -223,6 +240,7 @@ Use your OS native way to screen snip. On Windows, that is `Windows+Shift+S`. Yo
 
 The script will automatically detect the image in your clipboard, run the OCR, and translate it. The clipboard will be cleared after the translation is done. You might want to turn off auto-save screen snips in the Snipping Tools app settings.
 
+**Pro-tip:** ***It does not have to be an image!*** You can also just `Ctrl+C` to copy the text, and the script will automatically detect it and translate it. Extremely useful for reading web novels!!
 
 ### 4. You will need to wait...
 
@@ -230,7 +248,7 @@ For the translations to finish before snipping new text. Well, technically, whil
 
 Anything else you select, while it's translating, will be ignored.
 
-### 5. To exit, spam `Ctrl+C`
+### 5. To exit, spam `Ctrl+C` in the terminal
 
 Or just close the terminal window.
 

@@ -29,9 +29,15 @@
 
     "リンシャン": "rinsham",
 
+    "本須麗乃": "Urano Motosu",
+    "本須 麗乃": "Urano Motosu",
+    "本須": "Motosu",
+    "麗乃": "Urano",
+    "修": "Shuu",
+
     "ローゼマイン": "Rozemyne",
     "マイン": "Myne",
-    "フェルディナンド": "Ferdinand ",
+    "フェルディナンド": "Ferdinand",
     "ルッツ": "Lutz",
     "ギュンター": "Gunther",
     "エーファ": "Effa",
@@ -84,10 +90,17 @@
     "グラオザム": "Grausam",
     "グレーティア": "Gretia",
 
-    "エグランティーヌ": "Eglantine",
+    "レスティラウト": "Lestilaut",
     "ハンネローレ": "Hannelore",
-    "ディートリンデ": "Detlinde",
+    "ジークリンデ": "Sieglinde",
+    "マグダレーナ": "Magdalena",
+    "ラザンタルク": "Rasantark",
+    "ハイスヒッツェ": "Heisshitze",
+    "クラリッサ": "Clarissa",
+    "コルドゥラ": "Cordula",
 
+    "ディートリンデ": "Detlinde",
+    
     "ヒルシュール": "Hirschur",
     "フラウレルム": "Fraularm",
     "グンドルフ": "Gundolf",
@@ -95,10 +108,11 @@
     "パウリーネ": "Pauline",
     "ルーフェン": "Rauffen",
     "ソランジュ": "Solange",
-
+    
     "トラオクヴァール": "Trauerqual",
     "ジギスヴァルト": "Sigiswald",
     "アナスタージウス": "Anastasius",
+    "エグランティーヌ": "Eglantine",
     "ヒルデブラント": "Hildebrand",
 
     "フリュートレーネ": "Flutrane",
