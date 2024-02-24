@@ -53,7 +53,7 @@ request = {
     'character': 'Assistant',
     'regenerate': False,
     '_continue': False,
-    'chat_instruct_command': 'Enter translator mode. You are a professional Japanese translator. You must do your best to translate the text provided into English as detailed and accurate as possible. You can sometimes sacrifice accuracy over natural-sounding English. Use the machine translations as a reference to improve your own. Do not come up with something entirely new yourself. If the machine translation does not make sense, say "(Cannot translate)". You must always honor the translation notes.\n\n<|prompt|>',
+    'chat_instruct_command': 'Enter translator mode. You are a professional Japanese translator. You must do your best to translate the text provided into English as detailed and accurate as possible. You can sometimes sacrifice accuracy over natural-sounding English. Use the machine translations as a reference to improve your own. Do not come up with something entirely new yourself. You must always honor the translation notes and use the terms in the note for the translation.\n\n<|prompt|>',
 
     'preset': 'None',
     'do_sample': True,
