@@ -57,18 +57,18 @@ request = {
 
     'preset': 'None',
     'do_sample': True,
-    'temperature': 0.69,
-    'top_p': 0.23,
+    'temperature': 0.64,
+    'top_p': 0.1,
     'typical_p': 1,
     'epsilon_cutoff': 0,  # In units of 1e-4
     'eta_cutoff': 0,  # In units of 1e-4
     'tfs': 1,
     'top_a': 0,
-    'repetition_penalty': 1.16,
+    'repetition_penalty': 1.11,
     'presence_penalty': 0,
     'frequency_penalty': 0,
     'repetition_penalty_range': 0,
-    'top_k': 40,
+    'top_k': 32,
     'min_length': 1,
     'no_repeat_ngram_size': 0,
     'num_beams': 1,

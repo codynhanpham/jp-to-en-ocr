@@ -1,9 +1,16 @@
 # jp-to-en-ocr
 A scuff quality-of-life manga translator, using [manga_ocr](https://github.com/kha-white/manga-ocr), [argostranslate](https://github.com/argosopentech/argos-translate), and [translators](https://github.com/uliontse/translators) libraries.
 
-## Demo
+## Demo GIF
+<details open>
+    <summary><b>Machine Translations</b></summary>
+    <img src="./jp-en_manga-ocr_demo_15s.gif" alt="Machine Translations"/>
+</details>
+<!-- <details open>
+    <summary><b>AI-assisted Translation</b></summary>
+    <img src="./jp-en_manga-ocr_demo_15s.gif" alt="Machine Translations"/>
+</details> -->
 
-![](jp-en_manga-ocr_demo_15s.gif)
 
 ## Why?
 - I'm ~not a weeb~
